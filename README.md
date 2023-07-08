@@ -39,6 +39,11 @@ options:
   --debug               Enable debug output
 ```
 
+## Example Usage
+```
+./servarr_check_for_upgrades.py --radarr-apikey abcd1234efgh5678ijkl9012mnop3456 --sonarr-apikey abcdefghijklmnop1234567890123456
+```
+
 ## Testing
 Tested on
 - Ubuntu 22.04
