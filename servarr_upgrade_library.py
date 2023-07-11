@@ -15,6 +15,8 @@ TODO:
 - Implement Readarr
 """
 # Changelog
+# 0.2.1 - July 10, 2023
+#    Fixed a bug that would cause an empty resume file to be written after one *arr completed
 # 0.2.0 - July 9, 2023
 #   Added resume support
 #     kill process to pause progress
@@ -121,6 +123,8 @@ def process_sonarr(args):
                     logging.debug("Skipping episode " + str(episode_counter) + " due to resume position being " + str(resume_file_sonarr_content_list[6]))
         else:
             logging.debug("Skipping series " + str(series_counter) + " due to resume position being " + str(resume_file_sonarr_content_list[2]).strip())
+    for line in resume_file_lines_list:
+        resume_file_obj.write(line)
     resume_file_obj.close()
     logging.info("Finished processing Sonarr")
     return
@@ -175,6 +179,8 @@ def process_radarr(args):
                 logging.info("Not searching this movie due to not monitored in radarr")
         else:
             logging.debug("Skipping movie " + str(movies_counter) + " due to resume position being " + str(resume_file_radarr_content_list[1]).strip())
+    for line in resume_file_lines_list:
+        resume_file_obj.write(line)
     resume_file_obj.close()
     logging.info("Finished processing Radarr")
     return
