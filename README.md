@@ -10,8 +10,10 @@ This automates going to every TV episode and movie to search for higher quality 
 ## Usage
 ```
 # ./servarr_upgrade_library.py --help
-usage: servarr_upgrade_library.py [-h] [--sonarr-host SONARR_HOST] [--sonarr-apikey SONARR_APIKEY] [--radarr-host RADARR_HOST] [--radarr-apikey RADARR_APIKEY] [--lidarr-host LIDARR_HOST] [--lidarr-apikey LIDARR_APIKEY] [--readarr-host READARR_HOST]
-                                  [--readarr-apikey READARR_APIKEY] [--search-wait SEARCH_WAIT] [--skip-warning] [--debug]
+usage: servarr_upgrade_library.py [-h] [--sonarr-host SONARR_HOST] [--sonarr-apikey SONARR_APIKEY] [--sonarr-skip-seasons] [--sonarr-skip-episodes]
+                                  [--radarr-host RADARR_HOST] [--radarr-apikey RADARR_APIKEY] [--lidarr-host LIDARR_HOST] [--lidarr-apikey LIDARR_APIKEY]
+                                  [--readarr-host READARR_HOST] [--readarr-apikey READARR_APIKEY] [--resume-file RESUME_FILE] [--max-num-searches MAX_NUM_SEARCHES]
+                                  [--search-wait SEARCH_WAIT] [--skip-warning] [--debug]
 
 Process Servarr libraries and check for upgrades.
 
@@ -21,6 +23,10 @@ options:
                         Set the Sonarr host, default is http://127.0.0.1:8989/
   --sonarr-apikey SONARR_APIKEY
                         Set the Sonarr API key, required for Sonarr processing
+  --sonarr-skip-seasons
+                        Set Sonarr to not search for seasons
+  --sonarr-skip-episodes
+                        Set Sonarr to not search for individual episodes
   --radarr-host RADARR_HOST
                         Set the Radarr host default is http://127.0.0.1:7878/
   --radarr-apikey RADARR_APIKEY
@@ -33,6 +39,10 @@ options:
                         Set the Readarr host default is http://127.0.0.1:8787/
   --readarr-apikey READARR_APIKEY
                         Set the Readarr API key, required for Readarr processing
+  --resume-file RESUME_FILE
+                        Set resume filethat will be used, default is servarr_upgrade_library.resume
+  --max-num-searches MAX_NUM_SEARCHES
+                        Maximum number of searches per run, default is 50
   --search-wait SEARCH_WAIT
                         How many seconds to wait between searches, default is 60
   --skip-warning        Skip the warning about this script running a long time
