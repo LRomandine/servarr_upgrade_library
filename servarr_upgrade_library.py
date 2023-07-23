@@ -16,6 +16,9 @@ TODO:
 - Implement Readarr
 """
 # Changelog
+# 0.3.1 - July 22, 2023
+#   Fixed a bug when passing --max-num-searches
+#   Fixed a bug when passing --search-wait
 # 0.3.0 - July 19, 2023
 #   Added a maximum number of searches per run to help prevent overloading systems
 # 0.2.2 - July 16, 2023
@@ -225,6 +228,16 @@ def process_radarr(search_count, args):
     return search_count
 
 
+def check_positive(value):
+    try: 
+        ivalue = int(value)
+        if ivalue <= 0:
+            raise argparse.ArgumentTypeError("%s is an invalid positive int value" % value)
+    except:
+        raise argparse.ArgumentTypeError(f"Expected integer, got {value}")
+    return ivalue
+
+
 def process_lidarr(args):
     logging.critical("Lidarr functionality not implemented yet.")
     return
@@ -252,8 +265,8 @@ def main():
     parser.add_argument('--readarr-host',         dest='readarr_host',                              default='http://127.0.0.1:8787/',         help='Set the Readarr host default is http://127.0.0.1:8787/')
     parser.add_argument('--readarr-apikey',       dest='readarr_apikey',                            default=None,                             help='Set the Readarr API key, required for Readarr processing')
     parser.add_argument('--resume-file',          dest='resume_file',                               default='servarr_upgrade_library.resume', help='Set resume filethat will be used, default is servarr_upgrade_library.resume')
-    parser.add_argument('--max-num-searches',     dest='max_num_searches',                          default=50,                               help='Maximum number of searches per run, default is 50')
-    parser.add_argument('--search-wait',          dest='search_wait',                               default='60',                             help='How many seconds to wait between searches, default is 60')
+    parser.add_argument('--max-num-searches',     dest='max_num_searches',     type=check_positive, default=50,                               help='Maximum number of searches per run, default is 50')
+    parser.add_argument('--search-wait',          dest='search_wait',          type=check_positive, default=60,                               help='How many seconds to wait between searches, default is 60')
     parser.add_argument('--skip-warning',         dest='skip_warning',         action='store_true', default=False,                            help='Skip the warning about this script running a long time')
     parser.add_argument('--debug',                dest='debug',                action='store_true', default=False,                            help='Enable debug output')
     args = parser.parse_args()
