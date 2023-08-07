@@ -16,6 +16,8 @@ TODO:
 - Implement Readarr
 """
 # Changelog
+# 0.4.0 - August 6, 2023
+#   Added ability to specify a quality threshold for Radarr, so if a film is at or above the minimum it will not perform a search
 # 0.3.1 - July 22, 2023
 #   Fixed a bug when passing --max-num-searches
 #   Fixed a bug when passing --search-wait
@@ -189,6 +191,7 @@ def process_radarr(search_count, args):
     """Process Radarr"""
     logging.info("Starting to process Radarr")
     radarr = RadarrAPI(args.radarr_host, args.radarr_apikey)
+    radarr_qualities = radarr.get_quality_definition()
     movies_list = radarr.get_movie()
     movies_count = len(movies_list)
     resume_file_lines_list = read_resume_file(args)
@@ -212,6 +215,9 @@ def process_radarr(search_count, args):
                 logging.info("Reached maximum number of searches for this run")
                 return search_count
             if movie['monitored'] is True:
+                if (args.radarr_quality_min is not None) and (radarr_is_quality_better(args, radarr_qualities, movie['movieFile']['quality']['quality']['name']) is True):
+                    logging.info("Skipping search due to current version meeting quality minimum")
+                    continue
                 radarr.post_command('MoviesSearch', movieIds=[movie['id']]) 
                 search_count += 1
                 logging.debug("Sleeping for " + str(args.search_wait) + " seconds")
@@ -229,6 +235,7 @@ def process_radarr(search_count, args):
 
 
 def check_positive(value):
+    """Verify positive integer value"""
     try: 
         ivalue = int(value)
         if ivalue <= 0:
@@ -237,6 +244,15 @@ def check_positive(value):
         raise argparse.ArgumentTypeError(f"Expected integer, got {value}")
     return ivalue
 
+
+def radarr_is_quality_better(args, qualities, compare_quality):
+    """Returns True if the quality of the movie is better than or equal to what we want"""
+    min_quality_dict = next(item for item in qualities if item["title"] == args.radarr_quality_min)
+    current_quality_dict = next(item for item in qualities if item["title"] == compare_quality)
+    logging.debug("Minimum quality ID is " + str(min_quality_dict['id']) + " and current is " + str(current_quality_dict['id']))
+    if min_quality_dict['id'] <= current_quality_dict['id']:
+        return True
+    return False
 
 def process_lidarr(args):
     logging.critical("Lidarr functionality not implemented yet.")
@@ -258,6 +274,7 @@ def main():
     parser.add_argument('--sonarr-apikey',        dest='sonarr_apikey',                             default=None,                             help='Set the Sonarr API key, required for Sonarr processing')
     parser.add_argument('--sonarr-skip-seasons',  dest='sonarr_skip_seasons',  action='store_true', default=False,                            help='Set Sonarr to not search for seasons')
     parser.add_argument('--sonarr-skip-episodes', dest='sonarr_skip_episodes', action='store_true', default=False,                            help='Set Sonarr to not search for individual episodes')
+    parser.add_argument('--radarr-quality-min',   dest='radarr_quality_min',                        default=None,                             help='Set the Radarr minimum video quality, videos at or above are skipped, example "WEBDL-2160p". Get qualities list from http://127.0.0.1:7878/settings/quality')
     parser.add_argument('--radarr-host',          dest='radarr_host',                               default='http://127.0.0.1:7878/',         help='Set the Radarr host default is http://127.0.0.1:7878/')
     parser.add_argument('--radarr-apikey',        dest='radarr_apikey',                             default=None,                             help='Set the Radarr API key, required for Radarr processing')
     parser.add_argument('--lidarr-host',          dest='lidarr_host',                               default='http://127.0.0.1:8686/',         help='Set the Lidarr host default is http://127.0.0.1:8686/')
