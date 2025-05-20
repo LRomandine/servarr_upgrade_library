@@ -1,3 +1,11 @@
+# Update for 2025
+There is now an application that performs this type of functionality on a consistent basis
+[Huntarr.io](https://github.com/plexguide/Huntarr.io)
+
+---
+---
+---
+
 # servarr_upgrade_library
 Automatically search your Servarr libraries for upgrades to your content.
 
