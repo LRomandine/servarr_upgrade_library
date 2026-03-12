@@ -1,6 +1,7 @@
 # Update for 2025
 There is now an application that performs this type of functionality on a consistent basis
-[Huntarr.io](https://github.com/plexguide/Huntarr.io)
+~[Huntarr.io](https://github.com/plexguide/Huntarr.io)~
+[Huntarr is dead](https://www.reddit.com/r/selfhosted/comments/1rckopd/huntarr_your_passwords_and_your_entire_arr_stacks/), use [declutarr](https://github.com/ManiMatter/decluttarr)
 
 ---
 ---
